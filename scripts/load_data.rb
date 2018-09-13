@@ -18,7 +18,12 @@ end
 doc = File.open(options[:filename]) { |f| Nokogiri::XML(f) }
 doc.remove_namespaces! # The data comes with a single namespace
 
-doc.xpath("//brand").each do |brand|
+doc.xpath("/brands/brand").each do |brand|
+  brand_id = brand.xpath("id").text.to_i
+  binding.pry if brand_id == 0
+  brand_name = brand.xpath("name").text
+  Brand.create_with(name: brand_name).find_or_create_by(id: brand_id).update(name: brand_name)
+
   brand.xpath("models/model").each do |model|
     model.xpath("generations/generation").each do |generation|
       start_year = generation.xpath("modifications/modification/yearstart").map(&:text).min
@@ -30,3 +35,4 @@ doc.xpath("//brand").each do |brand|
     end
   end
 end
+
