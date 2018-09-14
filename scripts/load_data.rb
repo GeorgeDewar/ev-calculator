@@ -37,8 +37,21 @@ doc.xpath("/brands/brand").each do |brand|
       end_year = generation.xpath("modifications/modification/yearstop").map(&:text).max
       puts "#{brand.xpath("name").text} #{model.xpath("name").text} (#{start_year}-#{end_year})"
       generation.xpath("modifications/modification").each do |modification|
-        puts "  #{modification.xpath("engine").text}"
-
+        modification_id = modification.xpath("id").text.to_i
+        modification_engine = modification.xpath("engine").text
+        puts "  #{modification_engine}"
+        Modification.find_or_create_or_update!(modification_id, {
+            generation_id: generation_id,
+            engine: modification_engine,
+            year_start: modification.xpath("yearstart").text.presence,
+            year_stop: modification.xpath("yearstop").text.presence,
+            fuel_type: Modification::FUEL_TYPE_MAP[modification.xpath("fuel").text],
+            fuel_consumption_combined: modification.xpath("fuelConsumptionCombined").text.presence,
+            kerb_weight: modification.xpath("curbWeight").text.presence,
+            battery_capacity: modification.xpath("batteryCapacity").text.presence,
+            all_electric_range: modification.xpath("allElectricRange").text.presence,
+            average_energy_consumption: modification.xpath("averageEnergyConsumption").text.presence,
+        })
       end
     end
   end
