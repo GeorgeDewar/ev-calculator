@@ -7,4 +7,12 @@ class Modification < ApplicationRecord
       "Diesel" => :diesel,
       "Electricity" => :electric,
   }
+
+  scope :with_extras, -> do
+    joins(generation: {model: :brand}).select("*",
+      "generations.name as generation_name",
+      "models.name as model_name",
+      "brands.name as brand_name",
+    )
+  end
 end

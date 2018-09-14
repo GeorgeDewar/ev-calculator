@@ -8,12 +8,12 @@ class CreateModifications < ActiveRecord::Migration[5.2]
       t.integer :year_stop, index: true
 
       t.integer :fuel_type # enum
-      t.decimal :fuel_consumption_combined # L/100km
+      t.float :fuel_consumption_combined # L/100km
       t.integer :kerb_weight #kg
 
-      t.decimal :battery_capacity # kWh
+      t.float :battery_capacity # kWh
       t.integer :all_electric_range # km
-      t.decimal :average_energy_consumption # kWh/100km
+      t.float :average_energy_consumption # kWh/100km
     end
 
     add_index :modifications, [:generation_id, :engine], unique: true
