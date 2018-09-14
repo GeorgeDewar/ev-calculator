@@ -8,11 +8,11 @@ class Modification < ApplicationRecord
       "Electricity" => :electric,
   }
 
-  scope :with_extras, -> do
-    joins(generation: {model: :brand}).select("*",
-      "generations.name as generation_name",
-      "models.name as model_name",
-      "brands.name as brand_name",
-    )
+  scope :with_joins, -> do
+    joins(generation: {model: :brand})
+  end
+
+  scope :with_selects, -> do
+    select("*", "generations.name as generation_name", "models.name as model_name", "brands.name as brand_name")
   end
 end
