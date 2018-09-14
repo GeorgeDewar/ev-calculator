@@ -20,17 +20,25 @@ doc.remove_namespaces! # The data comes with a single namespace
 
 doc.xpath("/brands/brand").each do |brand|
   brand_id = brand.xpath("id").text.to_i
-  binding.pry if brand_id == 0
   brand_name = brand.xpath("name").text
-  Brand.create_with(name: brand_name).find_or_create_by(id: brand_id).update(name: brand_name)
+  Brand.find_or_create_or_update!(brand_id, name: brand_name)
 
   brand.xpath("models/model").each do |model|
+    model_id = model.xpath("id").text.to_i
+    model_name = model.xpath("name").text
+    Model.find_or_create_or_update!(model_id, brand_id: brand_id, name: model_name)
+
     model.xpath("generations/generation").each do |generation|
+      generation_id = generation.xpath("id").text.to_i
+      generation_name = generation.xpath("name").text
+      Generation.find_or_create_or_update!(generation_id, model_id: model_id, name: generation_name)
+
       start_year = generation.xpath("modifications/modification/yearstart").map(&:text).min
       end_year = generation.xpath("modifications/modification/yearstop").map(&:text).max
       puts "#{brand.xpath("name").text} #{model.xpath("name").text} (#{start_year}-#{end_year})"
       generation.xpath("modifications/modification").each do |modification|
         puts "  #{modification.xpath("engine").text}"
+
       end
     end
   end
