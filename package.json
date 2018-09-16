@@ -5,6 +5,7 @@
     "@material-ui/core": "^3.0.3",
     "@rails/webpacker": "3.5",
     "babel-preset-react": "^6.24.1",
+    "caniuse-lite": "^1.0.30000697",
     "prop-types": "^15.6.2",
     "react": "^16.5.0",
     "react-dom": "^16.5.0"
