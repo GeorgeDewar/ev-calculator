@@ -40,18 +40,23 @@ doc.xpath("/brands/brand").each do |brand|
         modification_id = modification.xpath("id").text.to_i
         modification_engine = modification.xpath("engine").text
         puts "  #{modification_engine}"
-        Modification.find_or_create_or_update!(modification_id, {
-            generation_id: generation_id,
-            engine: modification_engine,
-            year_start: modification.xpath("yearstart").text.presence&.to_i,
-            year_stop: modification.xpath("yearstop").text.presence&.to_i,
-            fuel_type: Modification::FUEL_TYPE_MAP[modification.xpath("fuel").text],
-            fuel_consumption_combined: modification.xpath("fuelConsumptionCombined").text.presence&.to_f,
-            kerb_weight: modification.xpath("curbWeight").text.presence&.to_i,
-            battery_capacity: modification.xpath("batteryCapacity").text.presence&.to_f,
-            all_electric_range: modification.xpath("allElectricRange").text.presence&.to_i,
-            average_energy_consumption: modification.xpath("averageEnergyConsumption").text.presence&.to_f,
-        })
+
+        begin
+          Modification.find_or_create_or_update!(modification_id, {
+              generation_id: generation_id,
+              engine: modification_engine,
+              year_start: modification.xpath("yearstart").text.presence&.to_i,
+              year_stop: modification.xpath("yearstop").text.presence&.to_i,
+              fuel_type: Modification::FUEL_TYPE_MAP[modification.xpath("fuel").text],
+              fuel_consumption_combined: modification.xpath("fuelConsumptionCombined").text.presence&.to_f,
+              kerb_weight: modification.xpath("curbWeight").text.presence&.to_i,
+              battery_capacity: modification.xpath("batteryCapacity").text.presence&.to_f,
+              all_electric_range: modification.xpath("allElectricRange").text.presence&.to_i,
+              average_energy_consumption: modification.xpath("averageEnergyConsumption").text.presence&.to_f,
+          })
+        rescue ActiveRecord::RecordNotUnique
+          puts "    [Duplicate ignored]"
+        end
       end
     end
   end
