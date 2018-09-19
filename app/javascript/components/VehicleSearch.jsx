@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import AsyncSelect from 'react-select/lib/Async';
+import { components } from 'react-select';
 
 const promiseOptions = inputValue =>
   new Promise(resolve => {
@@ -18,6 +19,14 @@ const promiseOptions = inputValue =>
       });
   });
 
+const Option = (props) => {
+  return (
+    <components.Option {...props}>
+      <div>{props.data.label} (<span style={{fontStyle: 'italic'}}>{props.data.generation_name}</span>)</div>
+    </components.Option>
+  );
+};
+
 export default class WithPromises extends Component {
   state = { inputValue: '' };
   handleInputChange = (newValue) => {
@@ -27,7 +36,7 @@ export default class WithPromises extends Component {
   };
   render() {
     return (
-      <AsyncSelect cacheOptions defaultOptions loadOptions={promiseOptions} />
+      <AsyncSelect cacheOptions defaultOptions loadOptions={promiseOptions} components={{ Option }} />
     );
   }
 }

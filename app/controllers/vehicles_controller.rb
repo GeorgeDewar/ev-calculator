@@ -14,5 +14,6 @@ class VehiclesController < ApplicationController
     ).where(["year_start <= ? or year_start is null", year.to_i])
      .where(["year_stop >= ? or year_stop is null", year.to_i])
      .where(["concat_ws(' ', brands.name, models.name, engine) ilike ?", "#{search}%"])
+     .limit(10)
   end
 end
