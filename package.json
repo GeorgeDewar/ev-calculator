@@ -8,7 +8,8 @@
     "caniuse-lite": "^1.0.30000697",
     "prop-types": "^15.6.2",
     "react": "^16.5.0",
-    "react-dom": "^16.5.0"
+    "react-dom": "^16.5.0",
+    "react-select": "^2.0.0"
   },
   "devDependencies": {
     "webpack-dev-server": "2.11.2"
