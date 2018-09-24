@@ -1,6 +1,4 @@
 import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
-import PropTypes from 'prop-types'
 import AsyncSelect from 'react-select/lib/Async';
 import { components } from 'react-select';
 
@@ -15,7 +13,6 @@ const promiseOptions = inputValue =>
       .then(resolve)
       .catch((error) => {
         console.warn(error);
-
       });
   });
 
@@ -28,12 +25,6 @@ const Option = (props) => {
 };
 
 export default class WithPromises extends Component {
-  state = { inputValue: '' };
-  handleInputChange = (newValue) => {
-    const inputValue = newValue.replace(/\W/g, '');
-    this.setState({ inputValue });
-    return inputValue;
-  };
   render() {
     return (
       <AsyncSelect cacheOptions defaultOptions loadOptions={promiseOptions} components={{ Option }} />

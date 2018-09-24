@@ -1,23 +1,21 @@
-// Run this example by adding <%= javascript_pack_tag 'hello_react' %> to the head of your layout file,
-// like app/views/layouts/application.html.erb. All it does is render <div>Hello React</div> at the bottom
-// of the page.
-
-import React from 'react'
+import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
-import PropTypes from 'prop-types'
 import VehicleSearch from 'components/VehicleSearch'
 
-const Hello = props => (
-  <div>Hello {props.name}!
-  <VehicleSearch/>
-  </div>
-)
+export default class Calculator extends Component {
 
-
+  render() {
+    return (
+      <div>Hello!
+        <VehicleSearch/>
+      </div>
+    );
+  }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
-    <Hello name="React" />,
+    <Calculator />,
     document.body.appendChild(document.createElement('div')),
   )
-})
+});
