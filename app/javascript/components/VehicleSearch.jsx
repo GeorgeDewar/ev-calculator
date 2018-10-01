@@ -27,7 +27,7 @@ const Option = (props) => {
 export default class WithPromises extends Component {
   render() {
     return (
-      <AsyncSelect cacheOptions defaultOptions loadOptions={promiseOptions} components={{ Option }} />
+      <AsyncSelect cacheOptions defaultOptions loadOptions={promiseOptions} components={{ Option }} {...this.props} />
     );
   }
 }
