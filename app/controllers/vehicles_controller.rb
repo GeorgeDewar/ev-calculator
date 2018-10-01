@@ -4,7 +4,13 @@ class VehiclesController < ApplicationController
   end
 
   def search
-    # Kia Optima
+    if params[:q].blank?
+      return render json: Modification.with_joins.select(
+          :id, "concat_ws(' ', brands.name, models.name, engine) as full_description",
+          "generations.name as generation_name"
+      ).where(id: [3297, 32782, 17132, 691, 16147])
+    end
+
     year, search = params[:q].split(" ", 2)
     return render json: [] unless year.present? && search.present?
 
