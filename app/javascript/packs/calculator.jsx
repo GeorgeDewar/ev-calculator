@@ -8,7 +8,9 @@ export default class Calculator extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      vehicle_description: null,
       kerb_weight: null,
+      fuel_type: null,
       fuel_economy: null,
     };
     this.selectVehicle = this.selectVehicle.bind(this);
@@ -21,6 +23,7 @@ export default class Calculator extends Component {
       .then(response => response.json())
       .then(response => {
         this.setState({
+          description: `${option.search_year} ${response.brand.name} ${response.model.name}`,
           kerb_weight: response.kerb_weight,
           fuel_type: response.fuel_type,
           fuel_economy: response.fuel_consumption_combined,
@@ -41,6 +44,11 @@ export default class Calculator extends Component {
       <div>
         <h2>Select your current vehicle</h2>
         <VehicleSearch onChange={this.selectVehicle} />
+        <TextField
+          style={{ display: 'block' }} fullWidth
+          label="Vehicle Description"
+          value={this.state.description || ''}
+          onChange={this.handleChange('description')} />
         <TextField
           style={{ display: 'block' }} fullWidth type="number"
           label="Kerb Weight (kg)"
