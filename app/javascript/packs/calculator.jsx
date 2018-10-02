@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import VehicleSearch from '../components/VehicleSearch';
 import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
 
 export default class Calculator extends Component {
   constructor(props) {
@@ -38,13 +39,26 @@ export default class Calculator extends Component {
   render() {
     return (
       <div>
+        <h2>Select your current vehicle</h2>
         <VehicleSearch onChange={this.selectVehicle} />
-        <TextField label="Kerb Weight (kg)" value={this.state.kerb_weight || ''}
-                   onChange={this.handleChange('kerb_weight')} />
-        <TextField label="Fuel Type" value={this.state.fuel_type || ''}
-                   onChange={this.handleChange('fuel_type')} />
-        <TextField label="Fuel Economy (L/100km, combined city/highway)" value={this.state.fuel_economy || ''}
-                   onChange={this.handleChange('fuel_economy')} />
+        <TextField
+          style={{ display: 'block' }} fullWidth type="number"
+          label="Kerb Weight (kg)"
+          value={this.state.kerb_weight || ''}
+          onChange={this.handleChange('kerb_weight')} />
+        <TextField
+          style={{ display: 'block' }} fullWidth select
+          label="Fuel Type" value={this.state.fuel_type || ''}
+          onChange={this.handleChange('fuel_type')}>
+          <MenuItem value="petrol">Petrol</MenuItem>
+          <MenuItem value="diesel">Diesel</MenuItem>
+          <MenuItem value="electric">Electric</MenuItem>
+        </TextField>
+        <TextField
+          style={{ display: 'block' }} fullWidth type="number"
+          label="Fuel Economy (L/100km, combined city/highway)"
+          value={this.state.fuel_economy || ''}
+          onChange={this.handleChange('fuel_economy')} />
 
       </div>
     );
