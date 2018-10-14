@@ -16,10 +16,17 @@ export default class Calculator extends Component {
         fuelEconomy: null,
         value: null,
       },
+      newVehicle: {
+        description: null,
+        kerbWeight: null,
+        fuelType: null,
+        fuelEconomy: null,
+        value: null,
+      }
     };
-    this.selectVehicle = this.selectVehicle.bind(this);
+    this.selectNamedVehicle = this.selectNamedVehicle.bind(this);
   };
-  selectVehicle(option) {
+  selectVehicle(name, option) {
     console.log(option);
     fetch(`/vehicles/${option.id}.json`, {
       method: 'GET',
@@ -27,7 +34,7 @@ export default class Calculator extends Component {
       .then(response => response.json())
       .then(response => {
         this.setState({
-          currentVehicle: {
+          [name]: {
             description: `${option.search_year} ${response.brand.name} ${response.model.name}`,
             kerbWeight: response.kerb_weight,
             fuelType: response.fuel_type,
@@ -41,35 +48,39 @@ export default class Calculator extends Component {
         console.warn(error);
       });
   }
-  handleChange = name => event => {
+  selectNamedVehicle(name) {
+    return (option) => this.selectVehicle(name, option);
+  }
+  handleChange = (name1, name2) => event => {
     this.setState({
-      currentVehicle: {
-        ...this.state.currentVehicle,
-        [name]: event.target.value,
+      [name1]: {
+        ...this.state[name1],
+        [name2]: event.target.value,
       },
     });
   };
   render() {
     var currentVehicle = this.state.currentVehicle;
+    var newVehicle = this.state.newVehicle;
     return (
       <div style={{display: 'flex'}}>
         <div style={{flex: 1}}>
           <h2>Step 1: Your Current Vehicle</h2>
-          <VehicleSearch onChange={this.selectVehicle} />
+          <VehicleSearch onChange={this.selectNamedVehicle('currentVehicle')} />
           <TextField
             style={{ display: 'block' }} fullWidth
             label="Vehicle Description"
             value={currentVehicle.description || ''}
-            onChange={this.handleChange('description')} />
+            onChange={this.handleChange('currentVehicle', 'description')} />
           <TextField
             style={{ display: 'block' }} fullWidth type="number"
             label="Kerb Weight (kg)"
             value={currentVehicle.kerbWeight || ''}
-            onChange={this.handleChange('kerbWeight')} />
+            onChange={this.handleChange('currentVehicle', 'kerbWeight')} />
           <TextField
             style={{ display: 'block' }} fullWidth select
             label="Fuel Type" value={currentVehicle.fuelType || ''}
-            onChange={this.handleChange('fuelType')}>
+            onChange={this.handleChange('currentVehicle', 'fuelType')}>
             <MenuItem value="petrol">Petrol</MenuItem>
             <MenuItem value="diesel">Diesel</MenuItem>
             <MenuItem value="electric">Electric</MenuItem>
@@ -79,17 +90,17 @@ export default class Calculator extends Component {
             label={currentVehicle.fuelType == "electric" ? "Energy usage (kW/100km, combined city/highway)" :
               "Fuel Economy (L/100km, combined city/highway)"}
             value={currentVehicle.fuelEconomy || ''}
-            onChange={this.handleChange('fuelEconomy')} />
+            onChange={this.handleChange('currentVehicle', 'fuelEconomy')} />
           <TextField
             style={{ display: 'block' }} fullWidth type="number"
             label="Total estimated lifespan (from new)"
             value={currentVehicle.lifespan || ''}
-            onChange={this.handleChange('lifespan')} />
+            onChange={this.handleChange('currentVehicle', 'lifespan')} />
           <TextField
             style={{ display: 'block' }} fullWidth type="number"
             label="Current value"
             value={currentVehicle.value || ''}
-            onChange={this.handleChange('value')} />
+            onChange={this.handleChange('currentVehicle', 'value')} />
         </div>
         <div style={{flex: 1}}>
           <h2>Step 2: Your Life</h2>
@@ -106,21 +117,21 @@ export default class Calculator extends Component {
         </div>
         <div style={{flex: 1}}>
           <h2>Step 3: Your New Vehicle</h2>
-          <VehicleSearch onChange={this.selectVehicle} />
+          <VehicleSearch onChange={this.selectNamedVehicle('newVehicle')} />
           <TextField
             style={{ display: 'block' }} fullWidth
             label="Vehicle Description"
-            value={currentVehicle.description || ''}
-            onChange={this.handleChange('description')} />
+            value={newVehicle.description || ''}
+            onChange={this.handleChange('newVehicle', 'description')} />
           <TextField
             style={{ display: 'block' }} fullWidth type="number"
             label="Kerb Weight (kg)"
-            value={currentVehicle.kerbWeight || ''}
-            onChange={this.handleChange('kerbWeight')} />
+            value={newVehicle.kerbWeight || ''}
+            onChange={this.handleChange('newVehicle', 'kerbWeight')} />
           <TextField
             style={{ display: 'block' }} fullWidth select
-            label="Fuel Type" value={currentVehicle.fuelType || ''}
-            onChange={this.handleChange('fuelType')}>
+            label="Fuel Type" value={newVehicle.fuelType || ''}
+            onChange={this.handleChange('newVehicle', 'fuelType')}>
             <MenuItem value="petrol">Petrol</MenuItem>
             <MenuItem value="diesel">Diesel</MenuItem>
             <MenuItem value="electric">Electric</MenuItem>
@@ -128,13 +139,13 @@ export default class Calculator extends Component {
           <TextField
             style={{ display: 'block' }} fullWidth type="number"
             label="Fuel Economy (L/100km, combined city/highway)"
-            value={currentVehicle.fuelEconomy || ''}
-            onChange={this.handleChange('fuelEconomy')} />
+            value={newVehicle.fuelEconomy || ''}
+            onChange={this.handleChange('newVehicle', 'fuelEconomy')} />
           <TextField
             style={{ display: 'block' }} fullWidth type="number"
             label="Purchase Price"
-            value={currentVehicle.value || ''}
-            onChange={this.handleChange('value')} />
+            value={newVehicle.value || ''}
+            onChange={this.handleChange('newVehicle', 'value')} />
         </div>
       </div>
     );
