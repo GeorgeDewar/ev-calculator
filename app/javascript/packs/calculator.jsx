@@ -4,6 +4,7 @@ import VehicleSearch from '../components/VehicleSearch';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import { LIFESPAN } from '../constants';
+import {calculateCosts} from "../model";
 
 export default class Calculator extends Component {
   constructor(props) {
@@ -22,7 +23,11 @@ export default class Calculator extends Component {
         fuelType: null,
         fuelEconomy: null,
         value: null,
-      }
+      },
+      circumstances: {
+        annualDistance: null,
+        interestRate: null,
+      },
     };
     this.selectNamedVehicle = this.selectNamedVehicle.bind(this);
   };
@@ -35,6 +40,7 @@ export default class Calculator extends Component {
       .then(response => {
         this.setState({
           [name]: {
+            year: option.search_year,
             description: `${option.search_year} ${response.brand.name} ${response.model.name}`,
             kerbWeight: response.kerb_weight,
             fuelType: response.fuel_type,
@@ -60,8 +66,8 @@ export default class Calculator extends Component {
     });
   };
   render() {
-    var currentVehicle = this.state.currentVehicle;
-    var newVehicle = this.state.newVehicle;
+    var { currentVehicle, circumstances, newVehicle } = this.state;
+    calculateCosts(currentVehicle, circumstances);
     return (
       <div style={{display: 'flex'}}>
         <div style={{flex: 1}}>
@@ -107,13 +113,13 @@ export default class Calculator extends Component {
           <TextField
             style={{ display: 'block' }} fullWidth type="number"
             label="How many KM do you drive each year?"
-            value={''}
-            onChange={this.handleChange('annualDistance')} />
+            value={circumstances.annualDistance || ''}
+            onChange={this.handleChange('circumstances', 'annualDistance')} />
           <TextField
             style={{ display: 'block' }} fullWidth type="number"
             label="What is your interest rate (on the savings or debt that would be affected)?"
-            value={''}
-            onChange={this.handleChange('interestRate')} />
+            value={circumstances.interestRate || ''}
+            onChange={this.handleChange('circumstances', 'interestRate')} />
         </div>
         <div style={{flex: 1}}>
           <h2>Step 3: Your New Vehicle</h2>
