@@ -1,3 +1,9 @@
+export const FUEL_NAME = {
+  petrol: "Petrol",
+  diesel: "Diesel",
+  electric: "Electricity",
+};
+
 export const LIFESPAN = {
   petrol: 22,
   diesel: 22,

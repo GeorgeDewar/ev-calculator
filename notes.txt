@@ -1,0 +1,19 @@
+I want to:
+
+- Easily add multiple cars
+- Change assumptions if I want to
+- Add my comparison cars(s)
+- See stuff
+
+For any given vehicle:
+
+- Mass
+- Fuel usage
+- Distance per year
+- Annual Maintenance
+- Current Value
+- Years of life remaining (20-age or 3)
+
+Overall:
+
+- Personal interest rate

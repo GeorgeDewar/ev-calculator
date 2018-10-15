@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import VehicleSearch from '../components/VehicleSearch';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
-import { LIFESPAN } from '../constants';
+import { LIFESPAN, FUEL_NAME } from '../constants';
 import {calculateCosts} from "../model";
 
 export default class Calculator extends Component {
@@ -28,8 +28,11 @@ export default class Calculator extends Component {
         annualDistance: null,
         interestRate: null,
       },
+      currentVehicleCosts: null,
+      newVehicleCosts: null,
     };
     this.selectNamedVehicle = this.selectNamedVehicle.bind(this);
+    this.updateCalculations = this.updateCalculations.bind(this);
   };
   selectVehicle(name, option) {
     console.log(option);
@@ -65,9 +68,14 @@ export default class Calculator extends Component {
       },
     });
   };
+  updateCalculations() {
+    this.setState({
+      currentVehicleCosts: calculateCosts(this.state.currentVehicle, this.state.circumstances),
+      newVehicleCosts: calculateCosts(this.state.newVehicle, this.state.circumstances),
+    });
+  }
   render() {
-    var { currentVehicle, circumstances, newVehicle } = this.state;
-    calculateCosts(currentVehicle, circumstances);
+    var { currentVehicle, circumstances, newVehicle, currentVehicleCosts, newVehicleCosts } = this.state;
     return (
       <div style={{display: 'flex'}}>
         <div style={{flex: 1}}>
@@ -77,16 +85,22 @@ export default class Calculator extends Component {
             style={{ display: 'block' }} fullWidth
             label="Vehicle Description"
             value={currentVehicle.description || ''}
-            onChange={this.handleChange('currentVehicle', 'description')} />
+            onChange={this.handleChange('currentVehicle', 'description')}
+            onBlur={this.updateCalculations}
+          />
           <TextField
             style={{ display: 'block' }} fullWidth type="number"
             label="Kerb Weight (kg)"
             value={currentVehicle.kerbWeight || ''}
-            onChange={this.handleChange('currentVehicle', 'kerbWeight')} />
+            onChange={this.handleChange('currentVehicle', 'kerbWeight')}
+            onBlur={this.updateCalculations}
+          />
           <TextField
             style={{ display: 'block' }} fullWidth select
             label="Fuel Type" value={currentVehicle.fuelType || ''}
-            onChange={this.handleChange('currentVehicle', 'fuelType')}>
+            onChange={this.handleChange('currentVehicle', 'fuelType')}
+            onBlur={this.updateCalculations}
+          >
             <MenuItem value="petrol">Petrol</MenuItem>
             <MenuItem value="diesel">Diesel</MenuItem>
             <MenuItem value="electric">Electric</MenuItem>
@@ -96,17 +110,34 @@ export default class Calculator extends Component {
             label={currentVehicle.fuelType == "electric" ? "Energy usage (kW/100km, combined city/highway)" :
               "Fuel Economy (L/100km, combined city/highway)"}
             value={currentVehicle.fuelEconomy || ''}
-            onChange={this.handleChange('currentVehicle', 'fuelEconomy')} />
+            onChange={this.handleChange('currentVehicle', 'fuelEconomy')}
+            onBlur={this.updateCalculations}
+          />
           <TextField
             style={{ display: 'block' }} fullWidth type="number"
             label="Total estimated lifespan (from new)"
             value={currentVehicle.lifespan || ''}
-            onChange={this.handleChange('currentVehicle', 'lifespan')} />
+            onChange={this.handleChange('currentVehicle', 'lifespan')}
+            onBlur={this.updateCalculations}
+          />
           <TextField
             style={{ display: 'block' }} fullWidth type="number"
             label="Current value"
             value={currentVehicle.value || ''}
-            onChange={this.handleChange('currentVehicle', 'value')} />
+            onChange={this.handleChange('currentVehicle', 'value')}
+            onBlur={this.updateCalculations}
+          />
+          {currentVehicleCosts && <div>
+            <table>
+              <tbody>
+                <tr><th>Depreciation</th><td>{currentVehicleCosts[0].depreciation}</td></tr>
+                <tr><th>Finance</th><td>{currentVehicleCosts[0].finance}</td></tr>
+                <tr><th>{FUEL_NAME[currentVehicle.fuelType]}</th><td>{currentVehicleCosts[0].fuel}</td></tr>
+                <tr><th>Maintenance</th><td>{currentVehicleCosts[0].maintenance}</td></tr>
+                <tr><th>Total</th><td>{currentVehicleCosts[0].total}</td></tr>
+              </tbody>
+            </table>
+          </div>}
         </div>
         <div style={{flex: 1}}>
           <h2>Step 2: Your Life</h2>
@@ -114,12 +145,16 @@ export default class Calculator extends Component {
             style={{ display: 'block' }} fullWidth type="number"
             label="How many KM do you drive each year?"
             value={circumstances.annualDistance || ''}
-            onChange={this.handleChange('circumstances', 'annualDistance')} />
+            onChange={this.handleChange('circumstances', 'annualDistance')}
+            onBlur={this.updateCalculations}
+          />
           <TextField
             style={{ display: 'block' }} fullWidth type="number"
             label="What is your interest rate (on the savings or debt that would be affected)?"
             value={circumstances.interestRate || ''}
-            onChange={this.handleChange('circumstances', 'interestRate')} />
+            onChange={this.handleChange('circumstances', 'interestRate')}
+            onBlur={this.updateCalculations}
+          />
         </div>
         <div style={{flex: 1}}>
           <h2>Step 3: Your New Vehicle</h2>
@@ -128,30 +163,52 @@ export default class Calculator extends Component {
             style={{ display: 'block' }} fullWidth
             label="Vehicle Description"
             value={newVehicle.description || ''}
-            onChange={this.handleChange('newVehicle', 'description')} />
+            onChange={this.handleChange('newVehicle', 'description')}
+            onBlur={this.updateCalculations}
+          />
           <TextField
             style={{ display: 'block' }} fullWidth type="number"
             label="Kerb Weight (kg)"
             value={newVehicle.kerbWeight || ''}
-            onChange={this.handleChange('newVehicle', 'kerbWeight')} />
+            onChange={this.handleChange('newVehicle', 'kerbWeight')}
+            onBlur={this.updateCalculations}
+          />
           <TextField
             style={{ display: 'block' }} fullWidth select
             label="Fuel Type" value={newVehicle.fuelType || ''}
-            onChange={this.handleChange('newVehicle', 'fuelType')}>
+            onChange={this.handleChange('newVehicle', 'fuelType')}
+            onBlur={this.updateCalculations}
+          >
             <MenuItem value="petrol">Petrol</MenuItem>
             <MenuItem value="diesel">Diesel</MenuItem>
             <MenuItem value="electric">Electric</MenuItem>
           </TextField>
           <TextField
             style={{ display: 'block' }} fullWidth type="number"
-            label="Fuel Economy (L/100km, combined city/highway)"
+            label={newVehicle.fuelType == "electric" ? "Energy usage (kW/100km, combined city/highway)" :
+              "Fuel Economy (L/100km, combined city/highway)"}
             value={newVehicle.fuelEconomy || ''}
-            onChange={this.handleChange('newVehicle', 'fuelEconomy')} />
+            onChange={this.handleChange('newVehicle', 'fuelEconomy')}
+            onBlur={this.updateCalculations}
+          />
           <TextField
             style={{ display: 'block' }} fullWidth type="number"
             label="Purchase Price"
             value={newVehicle.value || ''}
-            onChange={this.handleChange('newVehicle', 'value')} />
+            onChange={this.handleChange('newVehicle', 'value')}
+            onBlur={this.updateCalculations}
+          />
+          {newVehicleCosts && <div>
+            <table>
+              <tbody>
+              <tr><th>Depreciation</th><td>{newVehicleCosts[0].depreciation}</td></tr>
+              <tr><th>Finance</th><td>{newVehicleCosts[0].finance}</td></tr>
+              <tr><th>{FUEL_NAME[newVehicle.fuelType]}</th><td>{newVehicleCosts[0].fuel}</td></tr>
+              <tr><th>Maintenance</th><td>{newVehicleCosts[0].maintenance}</td></tr>
+              <tr><th>Total</th><td>{newVehicleCosts[0].total}</td></tr>
+              </tbody>
+            </table>
+          </div>}
         </div>
       </div>
     );
