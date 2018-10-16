@@ -12,6 +12,7 @@ export function calculateCosts(vehicle, circumstances) {
   var yearsRemaining = vehicle.lifespan - age;
   var annualDepreciation = vehicle.value / yearsRemaining;
 
+  let totals = {};
   var yearCosts = [];
   for(var i=0; i<numYears; i++) {
     var costs = {};
@@ -26,8 +27,12 @@ export function calculateCosts(vehicle, circumstances) {
     costs.total = Object.values(costs).reduce((a, b) => a + b, 0);
 
     yearCosts.push(costs);
+    Object.keys(costs).forEach(key => {
+      totals[key] = (totals[key] || 0) + costs[key];
+    })
   }
 
+  console.log(totals);
   console.log(yearCosts);
-  return yearCosts;
+  return { totals, yearCosts };
 }

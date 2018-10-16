@@ -130,11 +130,11 @@ export default class Calculator extends Component {
           {currentVehicleCosts && <div>
             <table>
               <tbody>
-                <tr><th>Depreciation</th><td>{currentVehicleCosts[0].depreciation}</td></tr>
-                <tr><th>Finance</th><td>{currentVehicleCosts[0].finance}</td></tr>
-                <tr><th>{FUEL_NAME[currentVehicle.fuelType]}</th><td>{currentVehicleCosts[0].fuel}</td></tr>
-                <tr><th>Maintenance</th><td>{currentVehicleCosts[0].maintenance}</td></tr>
-                <tr><th>Total</th><td>{currentVehicleCosts[0].total}</td></tr>
+                <tr><th>Depreciation</th><td>{currentVehicleCosts.totals.depreciation}</td></tr>
+                <tr><th>Finance</th><td>{currentVehicleCosts.totals.finance}</td></tr>
+                <tr><th>{FUEL_NAME[currentVehicle.fuelType]}</th><td>{currentVehicleCosts.totals.fuel}</td></tr>
+                <tr><th>Maintenance</th><td>{currentVehicleCosts.totals.maintenance}</td></tr>
+                <tr><th>Total</th><td>{currentVehicleCosts.totals.total}</td></tr>
               </tbody>
             </table>
           </div>}
@@ -201,11 +201,11 @@ export default class Calculator extends Component {
           {newVehicleCosts && <div>
             <table>
               <tbody>
-              <tr><th>Depreciation</th><td>{newVehicleCosts[0].depreciation}</td></tr>
-              <tr><th>Finance</th><td>{newVehicleCosts[0].finance}</td></tr>
-              <tr><th>{FUEL_NAME[newVehicle.fuelType]}</th><td>{newVehicleCosts[0].fuel}</td></tr>
-              <tr><th>Maintenance</th><td>{newVehicleCosts[0].maintenance}</td></tr>
-              <tr><th>Total</th><td>{newVehicleCosts[0].total}</td></tr>
+              <tr><th>Depreciation</th><td>{newVehicleCosts.totals.depreciation}</td></tr>
+              <tr><th>Finance</th><td>{newVehicleCosts.totals.finance}</td></tr>
+              <tr><th>{FUEL_NAME[newVehicle.fuelType]}</th><td>{newVehicleCosts.totals.fuel}</td></tr>
+              <tr><th>Maintenance</th><td>{newVehicleCosts.totals.maintenance}</td></tr>
+              <tr><th>Total</th><td>{newVehicleCosts.totals.total}</td></tr>
               </tbody>
             </table>
           </div>}
